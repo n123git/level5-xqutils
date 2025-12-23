@@ -33,3 +33,83 @@ from_charcode($param0)
 "@err@":
     return "";
 }
+
+is_int($param0) { // returns 1 if uint/int otherwise 0
+  $local1 = typeof($param0);
+  $local2 = $local1 == 1;
+  $local1 = $local1 == 2;
+  $local1 = $local1 or $local2;
+  if not $local1 goto "false"h;
+  return 1;
+
+  "false":
+  return 0;
+}
+
+is_numeric($param0) { // returns 1 if uint/int/float otherwise 0
+  $local1 = typeof($param0);
+  $local2 = $local1 == 1;
+  $local3 = $local1 == 3;
+  $local1 = $local1 == 2;
+  $local1 = $local1 or $local2;
+  $local1 = $local1 or $local3;
+  if not $local1 goto "false"h;
+  return 1;
+
+  "false":
+  return 0;
+}
+
+char_at($param0, $param1) // returns "" on invalid input
+{
+    // check string
+    $local0 = typeof($param0);
+    $local0 = $local0 == 8;
+    if not $local0 goto "err_inp"h;
+
+    // check index
+    $local1 = is_int($param1);
+    if not $local1 goto "err_inp"h;
+    $local1 = $param1 < 0;
+    if $local1 goto "err_inp"h;
+
+    $local2 = substring($param0, $param1);
+    return $local2;
+
+"err_inp":
+    return "";
+}
+
+
+typeof_string($param0) // similar to typeof but returns a more human readable string
+{
+    $local0 = typeof($param0);
+    $local1 = switch $local0
+    {
+        0  => "undefined"
+        1  => "int"
+        2  => "uint"
+        3  => "float"
+        // 4 = "variable"; but that should never be returned by typeof
+        8  => "string"
+        10 => "array"
+        // 24 and 25 technically exist too but will also never be returned by typeof
+        _  => "unk"
+    };
+
+    return $local1;
+}
+
+random_range($param0, $param1) { // returns an int/float (depending on input) between $param0 and $param1; returns "err" on an invalid input
+  $local1 = is_numeric($param0);
+  $local2 = is_numeric($param1);
+  $local1 = $local1 and $local2;
+  if not $local1 goto "err"h;
+  $local1 = $param1 - $param0;
+  $local2 = random($local1);
+  $local2 += $param0;
+  return $local2;
+
+  "err":
+  return "err";
+}
