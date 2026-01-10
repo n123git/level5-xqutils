@@ -22,14 +22,14 @@ strlen($param0)
    return -1;
 }
 
-from_charcode($param0) // returns values < 0 on an error; -1 = non numeric input; -2 = unsupported charcode range
+from_charcode($param0, $param1) // $param0 = charcode (numeric), $param1 = blockControlChars (false by default) returns values < 0 on an error; -1 = non numeric input; -2 = unsupported charcode range
 { // safe wrapper around %c to reject unsupported codepoints instead of emitting corrupted strings; (UTF-8 safe implementation)
-
     $local1 = is_int($param0);
     if not $local1 goto "invalid_input"h;
     $local1 = $param0 < 0x20;
-    if $local1 goto "check_latin1"h;
-    $local1 = $param0 > 0x7E
+    $local2 = $param0 > 0x7E;
+    $local1 = $local1 and $param1;
+    $local1 = $local1 or $local2;
     if $local1 goto "check_latin1"h;
     $local1 = format("%c", $param0);
     return $local1;
@@ -102,7 +102,7 @@ typeof_string($param0) // similar to typeof but returns a more human readable st
     {
         0  => "undefined"
         1  => "int"
-        2  => "uint"
+        2  => "uint" // used for CRC-32 hashes 99% of the time
         3  => "float"
         // 4 = "variable"; but that should never be returned by typeof
         8  => "string"
