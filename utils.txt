@@ -22,16 +22,30 @@ strlen($param0)
    return -1;
 }
 
-from_charcode($param0)
-{
-    $local0 = typeof($param0);
-    $local0 = $local0 == 1; // int
-    if not $local0 goto "@err@"h;
+from_charcode($param0) // returns values < 0 on an error; -1 = non numeric input; -2 = unsupported charcode range
+{ // safe wrapper around %c to reject unsupported codepoints instead of emitting corrupted strings; (UTF-8 safe implementation)
+
+    $local1 = is_int($param0);
+    if not $local1 goto "invalid_input"h;
+    $local1 = $param0 < 0x20;
+    if $local1 goto "check_latin1"h;
+    $local1 = $param0 > 0x7E
+    if $local1 goto "check_latin1"h;
     $local1 = format("%c", $param0);
     return $local1;
-	
-"@err@":
-    return "";
+
+"check_latin1":
+    $local1 = $param0 < 0xA0;
+    if $local1 goto "invalid_range"h;
+    $local1 = $param0 > 0xFF;
+    if $local1 goto "invalid_range"h;
+    $local1 = format("%c", $param0);
+    return $local1;
+
+"invalid_input": // for non numeric inputs
+    return -1;
+"invalid_range": // unsupported (non-ASCII) ranges
+   return -2;
 }
 
 is_int($param0) { // returns 1 if uint/int otherwise 0
