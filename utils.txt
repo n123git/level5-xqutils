@@ -98,7 +98,7 @@ char_at($param0, $param1) // returns "" on invalid input
 typeof_string($param0) // similar to typeof but returns a more human readable string
 {
     $local0 = typeof($param0);
-    $local1 = switch $local0
+    $local1 = $local0 switch
     {
         0  => "undefined"
         1  => "int"
@@ -113,6 +113,24 @@ typeof_string($param0) // similar to typeof but returns a more human readable st
 
     return $local1;
 }
+
+to_string($param0)
+{ // requires typeof_string to work
+  $local1 = typeof_string($param0);
+  $local2 = $local1 switch
+  {
+    "undefined" => "undefined<>"
+    "int" => "%s"
+    "uint" => "%u"
+    "float" => "%f"
+    "string" => "%s"
+    "array" => "array<>"
+    _ => "unk<>"
+  };
+  $local1 = format($local2, $param0);
+  return $local1;
+}
+
 
 random_range($param0, $param1) { // returns an int/float (depending on input) between $param0 and $param1; returns "err" on an invalid input
   $local1 = is_numeric($param0);
