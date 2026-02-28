@@ -115,22 +115,21 @@ typeof_string($param0) // similar to typeof but returns a more human readable st
 }
 
 to_string($param0)
-{ // requires typeof_string to work
-  $local1 = typeof_string($param0);
+{
+  $local1 = typeof($param0);
   $local2 = $local1 switch
   {
-    "undefined" => "undefined<>"
-    "int" => "%s"
-    "uint" => "%u"
-    "float" => "%f"
-    "string" => "%s"
-    "array" => "array<>"
-    _ => "unk<>"
+    0 => "undefined<>" // undefined
+    1 => "%s" // int
+    2 => "%u" // uint
+    3 => "%f" // float
+    8 => "%s" // string
+    10 => "array<>" // array
+    _ => "unk<>" // unk
   };
   $local1 = format($local2, $param0);
   return $local1;
 }
-
 
 random_range($param0, $param1) { // returns an int/float (depending on input) between $param0 and $param1; returns "err" on an invalid input
   $local1 = is_numeric($param0);
