@@ -119,13 +119,13 @@ to_string($param0)
   $local1 = typeof($param0);
   $local2 = $local1 switch
   {
-    0 => "undefined<>" // undefined
-    1 => "%s" // int
+    0 => "%dundefined<>" // undefined
+    1 => "%d" // int
     2 => "%u" // uint
     3 => "%f" // float
     8 => "%s" // string
-    10 => "array<>" // array
-    _ => "unk<>" // unk
+    10 => "%darray<>" // array
+    _ => "%dunk<>" // unk
   };
   $local1 = format($local2, $param0);
   return $local1;
